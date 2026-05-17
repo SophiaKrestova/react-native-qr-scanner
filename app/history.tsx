@@ -74,21 +74,50 @@ export default function HistoryScreen() {
 		]);
 	}, []);
 
+	const handleDeleteItem = useCallback(async (id: number) => {
+		Alert.alert("Видалити запис", "Ви хочете видалити цей запис?", [
+			{
+				text: "Скасувати",
+				style: "cancel",
+			},
+			{
+				text: "Видалити",
+				style: "destructive",
+				onPress: async () => {
+					setHistory((prev) => {
+						const next = prev.filter((item) => item.id !== id);
+						AsyncStorage.setItem(HISTORY_KEY, JSON.stringify(next));
+						return next;
+					});
+				},
+			},
+		]);
+	}, []);
+
 	const renderItem = useCallback(
 		({ item }: { item: HistoryItem }) => (
-			<Pressable
-				style={styles.card}
-				onPress={() => {
-					handleOpenItem(item.data);
-				}}
-			>
-				<Text style={styles.cardTitle} numberOfLines={2}>
-					{item.data}
-				</Text>
-				<Text style={styles.cardDate}>{item.date}</Text>
-			</Pressable>
+			<View style={styles.card}>
+				<Pressable
+					style={styles.cardContent}
+					onPress={() => {
+						handleOpenItem(item.data);
+					}}
+				>
+					<Text style={styles.cardTitle} numberOfLines={2}>
+						{item.data}
+					</Text>
+					<Text style={styles.cardDate}>{item.date}</Text>
+				</Pressable>
+				<Pressable
+					style={styles.deleteButton}
+					onPress={() => handleDeleteItem(item.id)}
+					hitSlop={10}
+				>
+					<Text style={styles.deleteButtonText}>×</Text>
+				</Pressable>
+			</View>
 		),
-		[handleOpenItem]
+		[handleDeleteItem, handleOpenItem]
 	);
 
 	if (!history.length && !isLoading) {
@@ -135,12 +164,18 @@ const styles = StyleSheet.create({
 		backgroundColor: "#FFFFFF",
 		borderRadius: 12,
 		padding: 16,
+		flexDirection: "row",
+		alignItems: "flex-start",
 		marginBottom: 12,
 		shadowColor: "#000000",
 		shadowOpacity: 0.08,
 		shadowOffset: { width: 0, height: 6 },
 		shadowRadius: 12,
 		elevation: 4,
+	},
+	cardContent: {
+		flex: 1,
+		paddingRight: 12,
 	},
 	cardTitle: {
 		fontSize: 16,
@@ -150,6 +185,19 @@ const styles = StyleSheet.create({
 	cardDate: {
 		marginTop: 6,
 		fontSize: 13,
+		color: "#8E8E93",
+	},
+	deleteButton: {
+		width: 28,
+		height: 28,
+		borderRadius: 14,
+		alignItems: "center",
+		justifyContent: "center",
+		backgroundColor: "#F2F2F7",
+	},
+	deleteButtonText: {
+		fontSize: 20,
+		lineHeight: 20,
 		color: "#8E8E93",
 	},
 	emptyContainer: {
