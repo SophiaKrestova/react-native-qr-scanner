@@ -1,3 +1,4 @@
+import Ionicons from "@expo/vector-icons/Ionicons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useFocusEffect } from "expo-router";
 import { useCallback, useState } from "react";
@@ -113,7 +114,7 @@ export default function HistoryScreen() {
 					onPress={() => handleDeleteItem(item.id)}
 					hitSlop={10}
 				>
-					<Text style={styles.deleteButtonText}>×</Text>
+					<Ionicons name="close" size={16} color="#8E8E93" />
 				</Pressable>
 			</View>
 		),
@@ -165,7 +166,7 @@ const styles = StyleSheet.create({
 		borderRadius: 12,
 		padding: 16,
 		flexDirection: "row",
-		alignItems: "flex-start",
+		alignItems: "center",
 		marginBottom: 12,
 		shadowColor: "#000000",
 		shadowOpacity: 0.08,
@@ -194,11 +195,6 @@ const styles = StyleSheet.create({
 		alignItems: "center",
 		justifyContent: "center",
 		backgroundColor: "#F2F2F7",
-	},
-	deleteButtonText: {
-		fontSize: 20,
-		lineHeight: 20,
-		color: "#8E8E93",
 	},
 	emptyContainer: {
 		flex: 1,
